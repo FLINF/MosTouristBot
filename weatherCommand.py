@@ -2,22 +2,24 @@ from selenium import webdriver
 from PIL import Image
 from io import BytesIO
 
-edge = webdriver.Edge()
-edge.get('https://www.gismeteo.ru/')
 
+def get_weather():
+    edge = webdriver.Edge()
+    edge.get('https://www.gismeteo.ru/')
 
-element = edge.find_element_by_class_name('')
-location = element.location
-size = element.size
-png = edge.get_screenshot_as_png()
-edge.quit()
+    element = edge.find_element_by_class_name('weather_frames')
+    location = element.location
+    size = element.size
+    png = edge.get_screenshot_as_png()
+    edge.quit()
 
-im = Image.open(BytesIO(png))
+    im = Image.open(BytesIO(png))
 
-left = location['x']
-top = location['y']
-right = location['x'] + size['width']
-bottom = location['y'] + size['height']
+    left = location['x']
+    top = location['y']
+    right = location['x'] + size['width']
+    bottom = location['y'] + size['height']
 
+    im = im.crop((left, top, right, bottom))
 
-im = im.crop((left, top, right, bottom))
+    return im
