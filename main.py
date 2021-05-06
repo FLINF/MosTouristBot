@@ -1,14 +1,24 @@
+import sqlite3
 import telebot
 import logging
+
+from telebot import types
+
 import weatherCommand
+import findParkCommand
 from variables import *
 
 bot = telebot.TeleBot(TOKEN)
 
-
 @bot.message_handler(commands=['start'])  # Команда для начала работы
 def start_handler(message):
-    bot.send_message(message.from_user.id, startMessage)
+    keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
+    button_help = types.KeyboardButton(text='/help')
+    button_find_park = types.KeyboardButton(text='/findPark')
+    button_find_sight = types.KeyboardButton(text='/findSight')
+    button_weather = types.KeyboardButton(text='/weather')
+    keyboard.add(button_help, button_find_park, button_find_sight, button_weather)
+    bot.send_message(message.from_user.id, startMessage, reply_markup=keyboard)
 
 
 @bot.message_handler(commands=['help'])  # Список команд
@@ -17,19 +27,24 @@ def help_handler(message):
 
 
 @bot.message_handler(commands=['weather'])  # Погода на сегодня
-def help_handler(message):
-    bot.send_message(message.from_user.id, inDevMessage)
-    im = weatherCommand.get_weather()
+def weather_handler(message):
+    im = weatherCommand.get_weather()  # Получаем скриншот погоды в Москве с gismeteo.ru
     bot.send_photo(message.from_user.id, im)
 
 
 @bot.message_handler(commands=['findPark'])  # Найти ближайший парк
-def help_handler(message):
-    bot.send_message(message.from_user.id, inDevMessage)
+def find_park_handler(message):
+    keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
+    button_geo = types.KeyboardButton(sendLocationButtonText, request_location=True)
+    keyboard.add(button_geo)
+    bot.send_message(message.from_user.id, sendLocationMessage, reply_markup=keyboard)
 
+    @bot.message_handler(content_types=['location'])
+    def find_park(message):
+        findParkCommand.location_handler(message)
 
 @bot.message_handler(commands=['findSight'])  # Поиск достопримечательности
-def help_handler(message):
+def find_sight_handler(message):
     bot.send_message(message.from_user.id, inDevMessage)
 
 
