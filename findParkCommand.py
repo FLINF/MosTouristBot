@@ -1,14 +1,10 @@
-from main import bot, cur
+import sqlite3
 
-
-def get_location():
-    @bot.message_handler(content_types=['location'])
-    def location_to_variable(message):
-        coordinates = (message.location.latitude, message.location.longitude)
-        return coordinates
-
+db = sqlite3.connect("MosTourist.db")
+cur = db.cursor()
 
 def find_park(coordinates):
-    cur.execute(f"""SELECT TOP 3 FROM park ORDER BY ABS( longitude - {coordinates[0]} + latitude - {coordinates[1]})""")
+    sqlvar = coordinates
+    cur.execute(f"""SELECT TOP 3 FROM park ORDER BY ABS(longitude - {sqlvar[0]} + latitude - {sqlvar[1]})""")
     result = cur.fetchall()
     return result
