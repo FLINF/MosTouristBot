@@ -14,6 +14,7 @@ def location_handler(location):
     button_weather = types.KeyboardButton(text='/weather')
     keyboard.add(button_help, button_find_park, button_find_sight, button_weather)
     bot.send_message(location.from_user.id, "Три ближайщих парка: ", reply_markup=keyboard)
+
     db = sqlite3.connect("MosTourist.db")
     coordinates = (location.location.latitude, location.location.longitude)
     cur = db.cursor()
