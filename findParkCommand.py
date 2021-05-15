@@ -14,12 +14,13 @@ def location_handler(location):
     button_weather = types.KeyboardButton(text='/weather')
     keyboard.add(button_help, button_find_park, button_find_sight, button_weather)
     bot.send_message(location.from_user.id, "Три ближайщих парка: ", reply_markup=keyboard)
+
     db = sqlite3.connect("MosTourist.db")
     coordinates = (location.location.latitude, location.location.longitude)
-    cur1 = db.cursor()
-    cur1.execute(f"""SELECT title, ent_objects, rating, latitude, longitude FROM park 
+    cur = db.cursor()
+    cur.execute(f"""SELECT title, ent_objects, rating, latitude, longitude FROM park 
         ORDER BY ABS(longitude - {coordinates[0]} + latitude - {coordinates[1]})""")
-    result = cur1.fetchmany(3)
+    result = cur.fetchmany(3)
     for row in result:
         markup = types.InlineKeyboardMarkup()
         btn_my_site = types.InlineKeyboardButton(text='Открыть в Google Maps',
