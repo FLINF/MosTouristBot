@@ -20,6 +20,6 @@ def get_weather():
     right = location['x'] + size['width']
     bottom = location['y'] + size['height']
 
-    im = im.crop((left, top+20, right, bottom+20))
+    im = im.crop((left, top+25, right, bottom+25))
 
     return im

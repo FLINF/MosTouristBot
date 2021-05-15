@@ -55,13 +55,18 @@ def find_sight_handler(message):
 
     @bot.message_handler(commands=['byName'])
     def name_search(message):
-        bot.send_message(message.from_user.id, inDevMessage)
         bot.send_message(message.from_user.id, text="Напишите название.")
-        print("debugsdjhkjghksjdhgksdjhglskjdhgksjhgkjsdghkjsghldkjghlsj")
         @bot.message_handler(content_types=['text'])
         def get_sight(message):
-            print("debugsdjhkjghksjdhgksdjhglskjdhgksjhgkjsdghkjsghldkjghlsj")
             findSightCommand.get_sight_by_name(message)
+
+    @bot.message_handler(commands=['byPhoto'])
+    def name_search(message):
+        bot.send_message(message.from_user.id, text="Отправьте фотографию.")
+
+        @bot.message_handler(content_types=['photo'])
+        def get_sight(message):
+            findSightCommand.get_sight_by_photo(message)
 
 
 
