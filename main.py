@@ -68,19 +68,6 @@ def find_sight_handler(message):
         def get_sight(message):
             findSightCommand.get_sight_by_photo(message)
 
-
-
-# @bot.message_handler(func=lambda message: True)
-# def forward_handler(message):  # Перессылка сообщенеий в приватный чат
-#     try:
-#         if message.chat.id == int(CHAT):
-#             bot.send_message(message.reply_to_message.forward_from_id, message.text)
-#         else:
-#             bot.forward_message(CHAT, message.chat.id, message.message_id)
-#     except Exception as error:
-#         print('Exception in forward handler. Info: {}'.format(error))
-
-
 def main(use_logging, level_name):  # Проверка сообщений
     if use_logging:
         telebot.logger.setLevel(logging.getLevelName(level_name))
