@@ -13,9 +13,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 from main import bot, standart_markup
 
 
-@bot.message_handler(content_types=['text'])
+@bot.message_handler(content_types=['text'])  # Поиск по названию
 def get_sight_by_name(name):
-    db = sqlite3.connect("MosTourist.db")  # одключаемя к БД и делаем запрос
+    db = sqlite3.connect("MosTourist.db")  # Подключаемся к БД и делаем запрос
     cur = db.cursor()
     cur.execute("""SELECT park_id, title, info, rating, type FROM sight""")
     sight_list = cur.fetchall()
@@ -35,7 +35,7 @@ def get_sight_by_name(name):
                          reply_markup=standart_markup())
 
 
-@bot.message_handler(content_types=['photo'])
+@bot.message_handler(content_types=['photo'])  # По фотографии
 def get_sight_by_photo(message):
     db = sqlite3.connect("MosTourist.db")  # Подключение БД
     cur = db.cursor()
@@ -52,7 +52,7 @@ def get_sight_by_photo(message):
                                                                         " i-bem']"))).click()
     element = edge.find_element_by_xpath('.//input[@class="cbir-panel__file-input"]')
     element.send_keys(os.getcwd()+fr"/temp/photo{message.from_user.id}.jpg")
-    # Автоматически загружаем изображение во Яндекс
+    # Автоматически загружаем изображение в Яндекс
 
     try:  # Проверяем случай, если Яндекс не находит объект на изображении
         WebDriverWait(edge, 10).until(ec.presence_of_element_located((By.XPATH, ".//*[@class='ObjectResponse-Title']")))
