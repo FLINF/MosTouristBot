@@ -8,13 +8,13 @@ def get_weather():
     edge = webdriver.Edge()
     edge.get('https://www.gismeteo.ru/')
 
-    element = edge.find_element_by_class_name('weather_frames')
+    element = edge.find_element_by_class_name('weather_frames')  # Получаем скриншот
     location = element.location
     size = element.size
     png = edge.get_screenshot_as_png()
     edge.quit()
 
-    im = Image.open(BytesIO(png))
+    im = Image.open(BytesIO(png))  # Открываем его с помощью PIL и обрезаем изображение
 
     left = location['x']
     top = location['y']
