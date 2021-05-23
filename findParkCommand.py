@@ -14,8 +14,10 @@ def location_handler(location):
     coordinates = (location.location.latitude, location.location.longitude)  # Записываем координаты в переменную
     cur = db.cursor()
     cur.execute(f"""SELECT title, ent_objects, rating, latitude, longitude FROM park 
-        ORDER BY ABS(longitude - {coordinates[0]} - latitude + {coordinates[1]})""")  # Плиск парков
+        ORDER BY ABS((longitude - {coordinates[1]})*(longitude - {coordinates[1]}) +
+         (latitude - {coordinates[0]})*(latitude - {coordinates[0]})) ASC""")  # Плиск парков
     result = cur.fetchmany(3)
+    print(result)
     for row in result:  # Вывож результата
         markup = types.InlineKeyboardMarkup()
         btn_my_site = types.InlineKeyboardButton(text='Открыть в Google Maps',
