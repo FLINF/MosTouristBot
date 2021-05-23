@@ -1,8 +1,9 @@
-import sqlite3
-import telebot
 import logging
-from variables import *
+
+import telebot
 from telebot import types
+
+from variables import *
 
 bot = telebot.TeleBot(TOKEN)
 

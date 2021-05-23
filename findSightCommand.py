@@ -1,15 +1,16 @@
 import os
 import sqlite3
-
-from selenium import webdriver
-from fuzzywuzzy import fuzz
-from selenium.common.exceptions import TimeoutException
-from main import bot, standart_markup
-from PIL import Image
 from io import BytesIO
-from selenium.webdriver.support import expected_conditions as ec
+
+from PIL import Image
+from fuzzywuzzy import fuzz
+from selenium import webdriver
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
+
+from main import bot, standart_markup
 
 
 @bot.message_handler(content_types=['text'])
@@ -23,11 +24,15 @@ def get_sight_by_name(name):
     for row in sight_list:  # Сравниваем строки и выводим самые похожие
         match = fuzz.token_sort_ratio(name, row[1])
         match_percent.append(match)
-    result = sight_list[match_percent.index(max(match_percent))]
-
-    bot.send_message(name.from_user.id, text=f"{result[1]} \n \nОписание: \n{result[2]} \n \n"
-                                             f"Рейтинг: {result[3]} \nТип: {result[4]}", reply_markup=standart_markup())
-    # Выводим стандартную клавиатуру
+    if max(match_percent) > 25:  # Процент сходства должен быть больше 25
+        result = sight_list[match_percent.index(max(match_percent))]
+        bot.send_message(name.from_user.id, text=f'{result[1]} \n \nОписание: \n{result[2]} \n \n'
+                                                 f'Рейтинг: {result[3]} \nТип: {result[4]}',
+                         reply_markup=standart_markup())
+    else:
+        bot.send_message(name.from_user.id,
+                         'К сожалению, нам не удалось найти эту достопимечательность.',
+                         reply_markup=standart_markup())
 
 
 @bot.message_handler(content_types=['photo'])
@@ -59,23 +64,21 @@ def get_sight_by_photo(message):
         for row in sight_list:  # Сравнение наденного в Яндексе с данными из БД
             match = fuzz.token_sort_ratio(name, row[1])
             match_percent.append(match)
-        if max(match_percent) > 10:  # Процент сходства должен быть больше 0
+        if max(match_percent) > 10:  # Процент сходства должен быть больше 10
             result = sight_list[match_percent.index(max(match_percent))]
-            print(max(match_percent))
+            bot.send_message(message.from_user.id, text=f'{result[1]} \n \nОписание: \n{result[2]} \n \n'
+                                                        f'Рейтинг: {result[3]} \nТип: {result[4]}',
+                             reply_markup=standart_markup())
         else:
-            result = 'К сожалению, нам не удалось найти достопимечательность на фотографии.'
+            bot.send_message(message.from_user.id,
+                             'К сожалению, нам не удалось найти достопимечательность на фотографии.',
+                             reply_markup=standart_markup())
 
     except TimeoutException:  # Объекта не найден
         print('Timeout exception.')
         bot.send_message(message.from_user.id, 'К сожалению, нам не удалось найти достопимечательность на фотографии.',
                          reply_markup=standart_markup())
-        edge.quit()
-        os.remove(os.getcwd()+fr"/temp/photo{message.from_user.id}.jpg")
-        return 0
 
-    bot.send_message(message.from_user.id, text=f'{result[1]} \n \nОписание: \n{result[2]} \n \n'
-                                                f'Рейтинг: {result[3]} \nТип: {result[4]}',
-                     reply_markup=standart_markup())
     edge.quit()
     os.remove(os.getcwd() + fr"/temp/photo{message.from_user.id}.jpg")
-    # Выключаем браузер, удаляем файл, возращаем стандартную клавиатуру
+    # Выключаем браузер, удаляем файл
