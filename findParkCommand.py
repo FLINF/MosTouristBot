@@ -2,26 +2,21 @@ import sqlite3
 
 from telebot import types
 
-from main import bot
+from main import bot, standart_markup
 
 
-@bot.message_handler(content_types=['location'])
+@bot.message_handler(content_types=['location'])  # Изпользование локации
 def location_handler(location):
-    keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
-    button_help = types.KeyboardButton(text='/help')
-    button_find_park = types.KeyboardButton(text='/findPark')
-    button_find_sight = types.KeyboardButton(text='/findSight')
-    button_weather = types.KeyboardButton(text='/weather')
-    keyboard.add(button_help, button_find_park, button_find_sight, button_weather)
-    bot.send_message(location.from_user.id, "Три ближайщих парка: ", reply_markup=keyboard)
+    bot.send_message(location.from_user.id, "Три ближайщих парка: ", reply_markup=standart_markup())
+    # Выводим стандартную клавиатуру т.к старая уже не нужна
 
-    db = sqlite3.connect("MosTourist.db")
-    coordinates = (location.location.latitude, location.location.longitude)
+    db = sqlite3.connect("MosTourist.db")  # Подключаемя к базе данных
+    coordinates = (location.location.latitude, location.location.longitude)  # Записываем координаты в переменную
     cur = db.cursor()
     cur.execute(f"""SELECT title, ent_objects, rating, latitude, longitude FROM park 
-        ORDER BY ABS(longitude - {coordinates[0]} + latitude - {coordinates[1]})""")
+        ORDER BY ABS(longitude - {coordinates[0]} - latitude + {coordinates[1]})""")  # Плиск парков
     result = cur.fetchmany(3)
-    for row in result:
+    for row in result:  # Вывож результата
         markup = types.InlineKeyboardMarkup()
         btn_my_site = types.InlineKeyboardButton(text='Открыть в Google Maps',
                                                  url=f'https://www.google.com/maps/search/?api=1&query={row[3]},{row[4]}')
