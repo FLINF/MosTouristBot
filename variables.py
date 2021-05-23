@@ -1,5 +1,5 @@
 TOKEN = '1278025721:AAH3sQnmnnxTbfRDYh2sOUEy3RJusTnLXMc'
-startMessage = 'Приветсвую, Я бот по имени MosTourist! ' \
+startMessage = 'Приветсnвую, Я бот по имени MosTourist! ' \
                'Напиши /help, чтобы узнать, что я умею!'
 helpMessage = 'Список доступных комманд: ' \
               '\n\n/start - команда для начала работы с ботом. ' \
