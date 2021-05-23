@@ -31,7 +31,7 @@ def get_sight_by_name(name):
                          reply_markup=standart_markup())
     else:
         bot.send_message(name.from_user.id,
-                         'К сожалению, нам не удалось найти эту достопимечательность.',
+                         'К сожалению, нам не удалось найти эту достопримечательность.',
                          reply_markup=standart_markup())
 
 
@@ -71,12 +71,12 @@ def get_sight_by_photo(message):
                              reply_markup=standart_markup())
         else:
             bot.send_message(message.from_user.id,
-                             'К сожалению, нам не удалось найти достопимечательность на фотографии.',
+                             'К сожалению, нам не удалось найти достопримечательность на фотографии.',
                              reply_markup=standart_markup())
 
     except TimeoutException:  # Объекта не найден
         print('Timeout exception.')
-        bot.send_message(message.from_user.id, 'К сожалению, нам не удалось найти достопимечательность на фотографии.',
+        bot.send_message(message.from_user.id, 'К сожалению, нам не удалось найти достопримечательность на фотографии.',
                          reply_markup=standart_markup())
 
     edge.quit()

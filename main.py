@@ -55,7 +55,7 @@ def find_sight_handler(message):
     button_by_photo = types.KeyboardButton(text='/byPhoto')
     keyboard.add(button_by_photo, button_by_name)
     bot.send_message(message.from_user.id, text = 'Выберите способ сравнения. \n byName - по названию. '
-                                                  '\n byPhoto - оп фото', reply_markup=keyboard)
+                                                  '\n byPhoto - по фото', reply_markup=keyboard)
 
     @bot.message_handler(commands=['byName']) # По имени
     def name_search(message):

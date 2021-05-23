@@ -7,7 +7,7 @@ from main import bot, standart_markup
 
 @bot.message_handler(content_types=['location'])  # Плиск по локации
 def location_handler(location):
-    bot.send_message(location.from_user.id, "Три ближайщих парка: ", reply_markup=standart_markup())
+    bot.send_message(location.from_user.id, "Три ближайших парка: ", reply_markup=standart_markup())
     # Выводим стандартную клавиатуру т.к старая уже не нужна
 
     db = sqlite3.connect("MosTourist.db")  # Подключаемя к базе данных
