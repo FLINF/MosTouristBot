@@ -5,7 +5,7 @@ from telebot import types
 from main import bot, standart_markup
 
 
-@bot.message_handler(content_types=['location'])  # Изпользование локации
+@bot.message_handler(content_types=['location'])  # Плиск по локации
 def location_handler(location):
     bot.send_message(location.from_user.id, "Три ближайщих парка: ", reply_markup=standart_markup())
     # Выводим стандартную клавиатуру т.к старая уже не нужна
@@ -15,7 +15,7 @@ def location_handler(location):
     cur = db.cursor()
     cur.execute(f"""SELECT title, ent_objects, rating, latitude, longitude FROM park 
             ORDER BY ABS((longitude - {coordinates[1]})*(longitude - {coordinates[1]}) +
-             (latitude - {coordinates[0]})*(latitude - {coordinates[0]})) ASC""")  # Плиск парков
+             (latitude - {coordinates[0]})*(latitude - {coordinates[0]})) ASC""")  # Поиск парков
     result = cur.fetchmany(3)
     for row in result:  # Вывож результата
         markup = types.InlineKeyboardMarkup()
