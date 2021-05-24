@@ -24,7 +24,7 @@ def get_sight_by_name(name):
     for row in sight_list:  # Сравниваем строки и выводим самые похожие
         match = fuzz.partial_token_set_ratio(name, row[1])
         match_percent.append(match)
-    if max(match_percent) > 33:  # Процент сходства должен быть больше 25
+    if max(match_percent) > 33:  # Процент сходства должен быть больше 33
         print(max(match_percent))
         result = sight_list[match_percent.index(max(match_percent))]
         bot.send_message(name.from_user.id, text=f'{result[1]} \n \nОписание: \n{result[2]} \n \n'
@@ -38,7 +38,7 @@ def get_sight_by_name(name):
 
 @bot.message_handler(content_types=['photo'])  # По фотографии
 def get_sight_by_photo(message):
-    db = sqlite3.connect("MosTourist.db")  # Подключение БД
+    db = sqlite3.connect("MosTourist.db")  # Подключение к БД
     cur = db.cursor()
 
     file_id = message.photo[-1].file_id  # Получаем id фотографии из сообщения
@@ -57,15 +57,15 @@ def get_sight_by_photo(message):
 
     try:  # Проверяем случай, если Яндекс не находит объект на изображении
         WebDriverWait(edge, 10).until(ec.presence_of_element_located((By.XPATH, ".//*[@class='ObjectResponse-Title']")))
-        name = edge.find_element_by_class_name('ObjectResponse-Title').text  # Ищем название найженного объекта
+        name = edge.find_element_by_class_name('ObjectResponse-Title').text  # Ищем название найденного объекта
         cur.execute("""SELECT park_id, title, info, rating, type FROM sight""")  # Запрос в БД
         sight_list = cur.fetchall()
 
         match_percent = []
-        for row in sight_list:  # Сравнение наденного в Яндексе с данными из БД
-            match = fuzz.token_sort_ratio(name, row[1])
+        for row in sight_list:  # Сравнение найденного в Яндексе с данными из БД
+            match = fuzz.partial_token_set_ratio(name, row[1])
             match_percent.append(match)
-        if max(match_percent) > 10:  # Процент сходства должен быть больше 10
+        if max(match_percent) > 33:  # Процент сходства должен быть больше 33
             result = sight_list[match_percent.index(max(match_percent))]
             bot.send_message(message.from_user.id, text=f'{result[1]} \n \nОписание: \n{result[2]} \n \n'
                                                         f'Рейтинг: {result[3]} \nТип: {result[4]}',
@@ -75,7 +75,7 @@ def get_sight_by_photo(message):
                              'К сожалению, нам не удалось найти достопримечательность на фотографии.',
                              reply_markup=standart_markup())
 
-    except TimeoutException:  # Объекта не найден
+    except TimeoutException:  # Объект не найден
         print('Timeout exception.')
         bot.send_message(message.from_user.id, 'К сожалению, нам не удалось найти достопримечательность на фотографии.',
                          reply_markup=standart_markup())
