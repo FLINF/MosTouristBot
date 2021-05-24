@@ -22,9 +22,10 @@ def get_sight_by_name(name):
 
     match_percent = []
     for row in sight_list:  # Сравниваем строки и выводим самые похожие
-        match = fuzz.token_sort_ratio(name, row[1])
+        match = fuzz.partial_token_set_ratio(name, row[1])
         match_percent.append(match)
-    if max(match_percent) > 25:  # Процент сходства должен быть больше 25
+    if max(match_percent) > 33:  # Процент сходства должен быть больше 25
+        print(max(match_percent))
         result = sight_list[match_percent.index(max(match_percent))]
         bot.send_message(name.from_user.id, text=f'{result[1]} \n \nОписание: \n{result[2]} \n \n'
                                                  f'Рейтинг: {result[3]} \nТип: {result[4]}',
