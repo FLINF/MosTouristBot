@@ -22,10 +22,9 @@ def get_sight_by_name(name):
 
     match_percent = []
     for row in sight_list:  # Сравниваем строки и выводим самые похожие
-        match = fuzz.partial_token_set_ratio(name, row[1])
+        match = fuzz.token_set_ratio(row[1], name)
         match_percent.append(match)
-    if max(match_percent) > 33:  # Процент сходства должен быть больше 33
-        print(max(match_percent))
+    if max(match_percent) > 50:  # Процент сходства должен быть больше 50
         result = sight_list[match_percent.index(max(match_percent))]
         bot.send_message(name.from_user.id, text=f'{result[1]} \n \nОписание: \n{result[2]} \n \n'
                                                  f'Рейтинг: {result[3]} \nТип: {result[4]}',
@@ -65,7 +64,7 @@ def get_sight_by_photo(message):
         for row in sight_list:  # Сравнение найденного в Яндексе с данными из БД
             match = fuzz.partial_token_set_ratio(name, row[1])
             match_percent.append(match)
-        if max(match_percent) > 33:  # Процент сходства должен быть больше 33
+        if max(match_percent) > 50:  # Процент сходства должен быть больше 50
             result = sight_list[match_percent.index(max(match_percent))]
             bot.send_message(message.from_user.id, text=f'{result[1]} \n \nОписание: \n{result[2]} \n \n'
                                                         f'Рейтинг: {result[3]} \nТип: {result[4]}',
